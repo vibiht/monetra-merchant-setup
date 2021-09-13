@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 class merchant_account():
     def __init__(self, user:str,merchNum:str):
         self.user = user
@@ -11,3 +12,6 @@ class merchEMV(merchant_account):
         super().__init__(user, merchNum)
         self.interacECR = interacECR
         self.creditECR = creditECR
+
+def main():
+    f - open("")
