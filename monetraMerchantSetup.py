@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 import configparser as cp
+import urllib.request as urlReq
+import json
+import monetraFunctions
 
 class merchant_account():
     def __init__(self, user:str,merchNum:str):
@@ -15,7 +18,8 @@ class merchEMV(merchant_account):
 
 def main():
     config = cp.ConfigParser()
-    config.read(r"C:\Users\VTHIRU\Repositories\precise-scripts\monetraMerchantSetup.ini")
+    #Config.read(r"C:\Users\VTHIRU\Repositories\precise-scripts\monetraMerchantSetup.ini")
+    config.read(r"monetraMerchantSetup.ini")
     host=config.get("INPUT","host")
     excelPath=config.get("INPUT","filepath")
     sheetName=config.get("INPUT","sheetname")
