@@ -3,6 +3,9 @@ import pandas
 import configparser
 import requests
 import monetraFunctions
+import socket
+import ssl
+import pprint
 
 #Base Merchant account class. Built for eSelect merchants later
 class merchant_account():
@@ -50,37 +53,45 @@ def main():
         skiprows=rowStart,
         nrows=rowCount
         )
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    ssl_sock = ssl.wrap_socket(
+        s,
+        ca_certs=r"C:\Users\VTHIRU\Repositories\precise-scripts",
+        cert_reqs=ssl.CERT_REQUIRED
+    )
+    ssl_sock.connect(host)
+    pprint.pprint(ssl_sock.getpeercert())
     #Iterate over each row in "table"
-    for i,row in table.iterrows():
-        #Instantiate merchEMV Object using row data
-        excelRow = merchEMV(row[1],row[0],row[4],row[2],row[3])        
-        #Generate JSON Payload
-        payload = (
-            monetraFunctions.payloadGenerator(
-                monetraFunctions.addMerchantAccountUser(
-                    excelRow.user, 
-                    excelRow.merchNum,
-                    excelRow.interacECR,
-                    0
-                ),
-                monetraFunctions.addMerchantAccountUser(
-                    excelRow.user, 
-                    excelRow.merchNum,
-                    excelRow.creditECR,
-                    1
-                ),
-                monetraFunctions.addMerchantSubUser(
-                    excelRow.user
-                ),
-                monetraFunctions.addMerchantCronTask(
-                    excelRow.user,
-                    excelRow.settleTime
-                )
-            )
-        )
-        #POST
-        monReq = requests.post(host,json=payload)
-        print(monReq.text)
-
+    # for i,row in table.iterrows():
+    #     #Instantiate merchEMV Object using row data
+    #     excelRow = merchEMV(row[1],row[0],row[4],row[2],row[3])        
+    #     #Generate JSON Payload
+    #     payload = (
+    #         monetraFunctions.payloadGenerator(
+    #             monetraFunctions.addMerchantAccountUser(
+    #                 excelRow.user, 
+    #                 excelRow.merchNum,
+    #                 excelRow.interacECR,
+    #                 0
+    #             ),
+    #             monetraFunctions.addMerchantAccountUser(
+    #                 excelRow.user, 
+    #                 excelRow.merchNum,
+    #                 excelRow.creditECR,
+    #                 1
+    #             ),
+    #             monetraFunctions.addMerchantSubUser(
+    #                 excelRow.user
+    #             ),
+    #             monetraFunctions.addMerchantCronTask(
+    #                 excelRow.user,
+    #                 excelRow.settleTime
+    #             )
+    #         )
+    #     )
+    #     #POST
+    #     monReq = requests.post(host,json=payload,verify=False)
+    #     print(monReq.text)
+    ssl_sock.close()
 if __name__ == "__main__":
     main()
