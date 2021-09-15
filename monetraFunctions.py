@@ -1,7 +1,12 @@
 from datetime import time
 import json
 
-def addMerchantAccountUser(user:str, merchNum:str, interacECR:str, creditECR:str):
+def addMerchantAccountUser(
+    user:str,
+    merchNum:str,
+    interacECR:str, 
+    creditECR:str
+):
     #Monetra_AIP_v8.17.0.pdf Section 4.3.1
     payload = {
         "MonetraTrans": {
@@ -47,7 +52,9 @@ def addMerchantAccountUser(user:str, merchNum:str, interacECR:str, creditECR:str
     }
     return (json.dumps(payload))
 
-def addMerchantSubUser(user:str):
+def addMerchantSubUser(
+    user:str
+):
     #Monetra_AIP_v8.17.0.pdf Section 5.1.1
     payload = {
         "MonetraTrans": {
@@ -66,7 +73,10 @@ def addMerchantSubUser(user:str):
     }
     return (json.dumps(payload))
 
-def addMerchantCronTask(user:str, settleTime:str):
+def addMerchantCronTask(
+    user:str, 
+    settleTime:str
+):
     #Monetra_AIP_v8.17.0.pdf Section 5.10 
     payload = {
         "MonetraTrans": {
@@ -84,3 +94,14 @@ def addMerchantCronTask(user:str, settleTime:str):
         }
     }
     return (json.dumps(payload))
+
+#Come back and finish this later
+# def payloadGenerator(
+#     *elements
+# ):
+#     for each in elements:
+#         payload = {
+#             "MonetraTrans": {
+
+#             }
+#         }
