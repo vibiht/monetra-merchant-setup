@@ -78,7 +78,7 @@ def addMerchantCronTask(user:str, settleTime:str):
                 "action":"admin",
                 "admin":"cron",
                 "cron":"add",
-                "cron_date":str(settleTime)+"|*",
+                "cron_date":''.join(char for char in str(settleTime) if char.isalnum())[0:4]+"|*", #Removing special characters from time
                 "cron_task":"settle"
             } 
         }
