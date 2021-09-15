@@ -56,6 +56,8 @@ def addMerchantSubUser(user:str):
                 "admin":"subuseradd",
                 "username":user,
                 "password":user+"*3984052",
+                "user":user,
+                "pwd":user+"*3984052",
                 "admintypes":"GETPERMS|MERCHINFO|RECURRINGADD|IMAGEADD",
                 "trantypes":"SALE|REVERSAL|VOID|TOREVERSAL|CARDTYPE|TERMLOAD|INTERACMAC|EMVCOMPLETE|ADMIN|CHKPWD",
                 "userflags":"obscure|unattended"
@@ -71,10 +73,12 @@ def addMerchantCronTask(user:str, settleTime:str):
             "cronTask": {
                 "username":user,
                 "password":user+"*3984052",
+                "user":user,
+                "pwd":user+"*3984052",
                 "action":"admin",
                 "admin":"cron",
                 "cron":"add",
-                "cron_date":settleTime+"|*",
+                "cron_date":str(settleTime)+"|*",
                 "cron_task":"settle"
             } 
         }
