@@ -1,9 +1,10 @@
 import numpy
 import pandas
 import configparser
-import urllib.request
+import requests
 import monetraFunctions
 
+#Base Merchant account class. Built for eSelect merchants later
 class merchant_account():
     def __init__(
         self, 
@@ -16,6 +17,7 @@ class merchant_account():
         self.settleTime = settleTime
 
 
+#EMV Class. Inherits Base Merchant.
 class merchEMV(merchant_account):
     def __init__(
         self, 
@@ -39,21 +41,46 @@ def main():
     sheetName=config.get("INPUT","sheetname")
     rowStart=config.getint("INPUT", "rowStart")
     rowCount=config.getint("INPUT", "rowCount")
-    #Parse Merchant #, Monetra User, iECR, cECR, Settlement Time
-    sheet = pandas.read_excel(
-        filepath=excelPath,
+    #Parse Merchant #, Monetra User, iECR, cECR, Settlement Time in "table" object
+    table = pandas.read_excel(
+        excelPath,
         sheet_name=sheetName,
         usecols="H,M,R,S,X",
         dtype={"H":str,"M":str,"R":str,"S":str,"X":str},
         skiprows=rowStart,
         nrows=rowCount
         )
-    #Iterate and call Monetra Function for each excel row
-    for index,row in sheet.iterrows():
-        excelRow = merchEMV(row[1],row[0],row[4],row[2],row[3])
-        print (monetraFunctions.addMerchantAccountUser(excelRow.user, excelRow.merchNum,excelRow.interacECR,excelRow.creditECR))
-        print (monetraFunctions.addMerchantSubUser(excelRow.user))
-        print (monetraFunctions.addMerchantCronTask(excelRow.user,excelRow.settleTime))
+    #Iterate over each row in "table"
+    for i,row in table.iterrows():
+        #Instantiate merchEMV Object using row data
+        excelRow = merchEMV(row[1],row[0],row[4],row[2],row[3])        
+        #Generate JSON Payload
+        payload = (
+            monetraFunctions.payloadGenerator(
+                monetraFunctions.addMerchantAccountUser(
+                    excelRow.user, 
+                    excelRow.merchNum,
+                    excelRow.interacECR,
+                    0
+                ),
+                monetraFunctions.addMerchantAccountUser(
+                    excelRow.user, 
+                    excelRow.merchNum,
+                    excelRow.creditECR,
+                    1
+                ),
+                monetraFunctions.addMerchantSubUser(
+                    excelRow.user
+                ),
+                monetraFunctions.addMerchantCronTask(
+                    excelRow.user,
+                    excelRow.settleTime
+                )
+            )
+        )
+        #POST
+        monReq = requests.post(host,json=payload)
+        print(monReq.text)
 
 if __name__ == "__main__":
     main()
