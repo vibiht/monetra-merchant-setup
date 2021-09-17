@@ -1,5 +1,40 @@
-from datetime import time
 import json
+
+#Base Merchant account class. Can be used for eSelect accounts. Unused for now
+class merchant_account():
+    def __init__(
+        self, 
+        user:str,
+        merchNum:str,
+        settleTime:str
+    ):
+        self.user = user
+        self.merchNum = merchNum
+        self.settleTime = settleTime
+
+
+#EMV Class. Inherits Base Merchant.
+class merchEMV(merchant_account):
+    def __init__(
+        self, 
+        user:str,
+        merchNum:str, 
+        settleTime:str, 
+        interacECR: str, 
+        creditECR: str
+    ):
+        super().__init__(user, merchNum,settleTime)
+        self.interacECR = interacECR
+        self.creditECR = creditECR
+
+
+def payloadGenerator(
+    *args
+):
+    payload={"MonetraTrans":{}}
+    for i,element in enumerate(args):
+        payload["MonetraTrans"][i]=element
+    return (json.dumps(payload))
 
 def addMerchantAccountUser(
     user:str,
@@ -64,11 +99,3 @@ def addMerchantCronTask(
             } 
 
     return (payload)
-
-def payloadGenerator(
-    *args
-):
-    payload={"MonetraTrans":{}}
-    for i,element in enumerate(args):
-        payload["MonetraTrans"][i]=element
-    return (json.dumps(payload))
