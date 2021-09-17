@@ -43,6 +43,13 @@ def addMerchantAccountUser(
     accountTier:int
 ):
     #Monetra_AIP_v8.17.0.pdf Section 4.3.1
+    if accountTier == 0:
+        cardTypes="INTERAC"
+        entryModes="INTERAC_CONTACT|INTERAC_CONTACTLESS"
+    else:
+        cardTypes="VISA+MC+AMEX+DISC+JCB"
+        entryModes="VISA_CONTACT|VISA_CONTACTLESS|MC_CONTACT|MC_CONTACTLESS|AMEX_CONTACT|AMEX_CONTACTLESS|DISC_CONTACT|DISC_CONTACTLESS|JCB_CONTACT|JCB_CONTACTLESS"
+
     payload= {
         "action":"adduser",
         "username":"MADMIN",
@@ -52,10 +59,10 @@ def addMerchantAccountUser(
         "sub":accountTier,
         "proc":"spdh",
         "indcode":"RS",
-        "cardtypes":"INTERAC",
+        "cardtypes":cardTypes,
         "mode":"BOTH",
         "email":"system.monitoring@preciserd.ca",
-        "emv_entrymodes":"INTERAC_CONTACT|INTERAC_CONTACTLESS",
+        "emv_entrymodes":entryModes,
         "emv_termcaps":"OFFLINEPIN",
         "MERCHID":"00"+str(merchNum),
         "TERMID":ecr,
@@ -87,12 +94,12 @@ def addMerchantCronTask(
 ):
     #Monetra_AIP_v8.17.0.pdf Section 5.10 
     payload = {
+                "action":"admin",
+                "admin":"cron",
                 "username":user,
                 "password":user+"*3984052",
                 "user":user,
                 "pwd":user+"*3984052",
-                "action":"admin",
-                "admin":"cron",
                 "cron":"add",
                 "cron_date":''.join(char for char in str(settleTime) if char.isalnum())[0:4]+"|*", #Removing special characters from time
                 "cron_task":"settle"
