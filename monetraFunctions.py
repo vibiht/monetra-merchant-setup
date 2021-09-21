@@ -80,7 +80,7 @@ def addMerchantSubUser(
                 "admin":"subuseradd",
                 "username":user,
                 "password":user+"*3984052",
-                "user":user,
+                "user":"online",
                 "pwd":user+"*3984052",
                 "admintypes":"GETPERMS|MERCHINFO|RECURRINGADD|IMAGEADD",
                 "trantypes":"SALE|REVERSAL|VOID|TOREVERSAL|CARDTYPE|TERMLOAD|INTERACMAC|EMVCOMPLETE|ADMIN|CHKPWD",
@@ -98,7 +98,7 @@ def addMerchantCronTask(
                 "admin":"cron",
                 "username":user,
                 "password":user+"*3984052",
-                "user":user,
+                "user":"online",
                 "pwd":user+"*3984052",
                 "cron":"add",
                 "cron_date":''.join(char for char in str(settleTime) if char.isalnum())[0:4]+"|*", #Removing special characters from time
