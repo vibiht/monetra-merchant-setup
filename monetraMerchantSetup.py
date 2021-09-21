@@ -24,8 +24,8 @@ def main():
     table = pandas.read_excel(
         excelPath,
         sheet_name=sheetName,
-        usecols="H,M,R,S,X",
-        dtype={"H":str,"M":str,"R":str,"S":str,"X":str},
+        usecols="H,K,M,R,S,X",
+        dtype={"H":str,"K":str,"M":str,"R":str,"S":str,"X":str},
         skiprows=rowStart,
         nrows=rowCount
     )
@@ -33,7 +33,7 @@ def main():
     for i,row in table.iterrows():
         logging.info("Reading row #:" + str (rowStart + i+1))
         #Instantiate merchEMV Object using row data
-        excelRow = monetraFunctions.merchEMV(row[1],row[0],row[4],row[2],row[3]) 
+        excelRow = monetraFunctions.merchEMV(row[0],row[1],row[2],row[3],row[4],row[5]) 
         logging.info("Row =" + str(excelRow))       
         #Generate JSON Payload
         logging.info("Generating JSON Payload")
@@ -43,13 +43,15 @@ def main():
                     excelRow.user, 
                     excelRow.merchNum,
                     excelRow.interacECR,
-                    0
+                    0,
+                    excelRow.device
                 ),
                 monetraFunctions.addMerchantAccountUser(
                     excelRow.user, 
                     excelRow.merchNum,
                     excelRow.creditECR,
-                    1
+                    1,
+                    excelRow.device
                 )
             )
         )
@@ -64,7 +66,8 @@ def main():
         payload = (
             monetraFunctions.payloadGenerator(
                 monetraFunctions.addMerchantSubUser(
-                    excelRow.user
+                    excelRow.user,
+                    excelRow.device
                 ),
                 monetraFunctions.addMerchantCronTask(
                     excelRow.user,
