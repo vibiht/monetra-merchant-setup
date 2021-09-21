@@ -8,8 +8,9 @@ import datetime
 
 
 def main():
+    logPath = str(os.getcwd())+"\logs\{0}.txt"
     logging.basicConfig(
-        filename="{0}.txt".format(datetime.date.today())
+        filename=logPath.format(datetime.date.today())
         ,level=logging.INFO
         ,format="%(asctime)s %(message)s"
         , datefmt='%m/%d/%Y %I:%M:%S %p'
