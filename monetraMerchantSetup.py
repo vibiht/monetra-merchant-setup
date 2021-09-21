@@ -3,13 +3,22 @@ import configparser
 import requests
 import monetraFunctions
 import logging
+import os
+import datetime
+
 
 def main():
-    logging.basicConfig(filename="log.txt",level=logging.INFO,format="%(asctime)s %(message)s", datefmt='%m/%d/%Y %I:%M:%S %p')
+    logging.basicConfig(
+        filename="{0}.txt".format(datetime.date.today())
+        ,level=logging.INFO
+        ,format="%(asctime)s %(message)s"
+        , datefmt='%m/%d/%Y %I:%M:%S %p'
+    )
     #Open and read monetraMerchanSetup.ini file
     config = configparser.ConfigParser()
     logging.info("Reading config from monetraMerchantSetup.ini")
-    config.read(r"monetraMerchantSetup.ini")
+    iniPath = str(os.getcwd())+"\config\monetraMerchantSetup.ini"
+    config.read(iniPath)
     host=config.get("INPUT","host")
     excelPath=config.get("INPUT","filepath")
     sheetName=config.get("INPUT","sheetname")
