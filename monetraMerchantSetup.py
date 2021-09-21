@@ -52,7 +52,19 @@ def main():
                     excelRow.merchNum,
                     excelRow.creditECR,
                     1
-                ),
+                )
+            )
+        )
+        logging.info("Payload = " + str(payload))
+        #POST
+        logging.info("Sending POST request to " + host)
+        monReq = requests.post(host,data=payload,verify=False,allow_redirects=True)
+        print(monReq.text)
+        logging.info("Monetra Response: " + monReq.text)
+         #Generate JSON Payload
+        logging.info("Generating JSON Payload")
+        payload = (
+            monetraFunctions.payloadGenerator(
                 monetraFunctions.addMerchantSubUser(
                     excelRow.user
                 ),
