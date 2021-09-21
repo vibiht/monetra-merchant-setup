@@ -5,3 +5,4 @@ __pycache__/monetraFunctions.cpython-38.pyc
 *.ini
 *.ini
 monetraMerchantSetup.ini
+*.xlsx
