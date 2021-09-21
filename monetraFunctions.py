@@ -52,12 +52,14 @@ def addMerchantAccountUser(
         entryModes="INTERAC_CONTACT|INTERAC_CONTACTLESS"
     else:
         cardTypes="VISA+MC+AMEX+DISC+JCB"
-        entryModes="VISA_CONTACT|VISA_CONTACTLESS|MC_CONTACT|MC_CONTACTLESS|AMEX_CONTACT|AMEX_CONTACTLESS|DISC_CONTACT|DISC_CONTACTLESS|JCB_CONTACT|JCB_CONTACTLESS"
+        entryModes=("VISA_CONTACT|VISA_CONTACTLESS|MC_CONTACT|MC_CONTACTLESS|"
+            "AMEX_CONTACT|AMEX_CONTACTLESS|DISC_CONTACT|DISC_CONTACTLESS|"
+            "JCB_CONTACT|JCB_CONTACTLESS")
     #MPS vs Unattended check
     if device =="MPS":
-        indCode="RS"
-    else:
         indCode="R"
+    else:
+        indCode="RS"
     payload= {
         "action":"adduser",
         "username":"MADMIN",
@@ -71,7 +73,7 @@ def addMerchantAccountUser(
         "mode":"BOTH",
         "email":"system.monitoring@preciserd.ca",
         "emv_entrymodes":entryModes,
-        "emv_termcaps":"OFFLINEPIN",
+        "emv_termcaps":"NOSIG",
         "MERCHID":"00"+str(merchNum),
         "TERMID":ecr,
         "countrycode":"124",
@@ -86,11 +88,11 @@ def addMerchantSubUser(
     #Monetra_AIP_v8.17.0.pdf Section 5.1.1
     #MPS vs Unattended Check
     if device =="MPS":
-        trantypes="SALE|REVERSAL|VOID|RETURN|TOREVERSAL|CARDTYPE|TERMLOAD|\
-            INTERACMAC|EMVCOMPLETE|ADMIN|CHKPWD"
+        trantypes=("SALE|REVERSAL|VOID|RETURN|TOREVERSAL|CARDTYPE|TERMLOAD|"
+        "INTERACMAC|EMVCOMPLETE|ADMIN|CHKPWD")
     else:
-        trantypes="SALE|REVERSAL|VOID|TOREVERSAL|CARDTYPE|TERMLOAD|INTERACMAC|\
-            EMVCOMPLETE|ADMIN|CHKPWD"
+        trantypes=("SALE|REVERSAL|VOID|TOREVERSAL|CARDTYPE|TERMLOAD|INTERACMAC|"
+            "EMVCOMPLETE|ADMIN|CHKPWD")
     payload ={
                 "action":"admin",
                 "admin":"subuseradd",
@@ -98,8 +100,8 @@ def addMerchantSubUser(
                 "password":user+"*3984052",
                 "user":"online",
                 "pwd":user+"*3984052",
-                "admintypes":"GETPERMS|MERCHINFO|RECURRINGADD|IMAGEADD|\
-                    CARDSHIELDPROVISION",
+                "admintypes":("GETPERMS|MERCHINFO|RECURRINGADD|IMAGEADD|"
+                "CARDSHIELDPROVISION"),
                 "trantypes":trantypes,
                 "userflags":"obscure|unattended"
             } 
