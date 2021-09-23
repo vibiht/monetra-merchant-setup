@@ -1,23 +1,25 @@
 import configparser
-import datetime
+from datetime import date
 import logging
-import os
+from os import getcwd
 
 import pandas
-import requests
+from requests import post
 
 import monetraFunctions
 
 
 def main():
-    logPath = str(os.getcwd())+"\logs\{0}.txt"
+    logPath = str(getcwd()) + "\\logs\\{0}.txt"
     logging.basicConfig(
-        filename=logPath.format(datetime.date.today()), level=logging.INFO, format="%(asctime)s %(message)s", datefmt='%m/%d/%Y %I:%M:%S %p'
+        filename=logPath.format(date.today()), level=logging.INFO, format="%(asctime)s %(message)s", datefmt='%m/%d/%Y %I:%M:%S %p'
     )
     # Open and read monetraMerchanSetup.ini file
     config = configparser.ConfigParser()
+    logging.info(
+        "------------------------------------------------------------")
     logging.info("Reading config from monetraMerchantSetup.ini")
-    iniPath = str(os.getcwd())+"\config\monetraMerchantSetup.ini"
+    iniPath = str(getcwd()) + "\\config\\monetraMerchantSetup.ini"
     config.read(iniPath)
     host = config.get("INPUT", "host")
     excelPath = config.get("INPUT", "filepath")
@@ -29,7 +31,8 @@ def main():
     logging.info("Sheetname = " + str(sheetName))
     logging.info("Starting Row = " + str(rowStart))
     logging.info("Number of Rows = " + str(rowCount))
-    # Parse Merchant #, Monetra User, iECR, cECR, Settlement Time in "table" object
+    # Parse Merchant #, Monetra User, iECR, cECR, Settlement Time in "table"
+    # object
     table = pandas.read_excel(
         excelPath,
         sheet_name=sheetName,
@@ -40,7 +43,7 @@ def main():
     )
     # Iterate over each row in "table"
     for i, row in table.iterrows():
-        logging.info("Reading row #:" + str(rowStart + i+1))
+        logging.info("Reading row #:" + str(rowStart + i + 1))
         # Instantiate merchEMV Object using row data
         excelRow = monetraFunctions.merchEMV(
             row[0], row[1], row[2], row[3], row[4], row[5])
@@ -65,10 +68,10 @@ def main():
                 )
             )
         )
-        logging.info("Payload = " + str(payload))
+        logging.info("Payload = " + payload)
         # POST
         logging.info("Sending POST request to " + host)
-        monReq = requests.post(
+        monReq = post(
             host, data=payload, verify=False, allow_redirects=True)
         print(monReq.text)
         logging.info("Monetra Response: " + monReq.text)
@@ -86,10 +89,10 @@ def main():
                 )
             )
         )
-        logging.info("Payload = " + str(payload))
+        logging.info("Payload = " + payload)
         # POST
         logging.info("Sending POST request to " + host)
-        monReq = requests.post(
+        monReq = post(
             host, data=payload, verify=False, allow_redirects=True)
         print(monReq.text)
         logging.info("Monetra Response: " + monReq.text)
