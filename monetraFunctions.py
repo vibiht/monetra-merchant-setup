@@ -36,7 +36,7 @@ def payloadGenerator(
     payload={"MonetraTrans":{}}
     for i,element in enumerate(args):
         payload["MonetraTrans"][i]=element
-    return (json.dumps(payload))
+    return (json.dumps(payload,indent=4))
 
 def addMerchantAccountUser(
     user:str,
