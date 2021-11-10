@@ -28,74 +28,73 @@ class merchEMV(merchant_account):
         self.interacECR = interacECR
         self.creditECR = creditECR
         self.device = device
-    def addMerchantAccountUser(
-        user:str,
-        merchNum:str,
-        ecr:str,
-        accountTier:int,
-        device:str
-    ):
-        #Monetra_AIP_v8.17.0.pdf Section 4.3.1
-        #Main Account vs Sub Account check
-        if accountTier == 0:
-            cardTypes="INTERAC"
-            entryModes="INTERAC_CONTACT|INTERAC_CONTACTLESS"
-        else:
-            cardTypes="VISA+MC+AMEX+DISC+JCB"
-            entryModes=("VISA_CONTACT|VISA_CONTACTLESS|MC_CONTACT|MC_CONTACTLESS|"
-                "AMEX_CONTACT|AMEX_CONTACTLESS|DISC_CONTACT|DISC_CONTACTLESS|"
-                "JCB_CONTACT|JCB_CONTACTLESS")
-        #MPS vs Unattended check
-        if device =="MPS":
-            indCode="R"
-        else:
-            indCode="RS"
-        payload= {
-            "action":"adduser",
-            "username":"MADMIN",
-            "password":"precise*3984052",
-            "user":user,
-            "pwd":user+"*3984052",
-            "sub":accountTier,
-            "proc":"spdh",
-            "indcode":indCode,
-            "cardtypes":cardTypes,
-            "mode":"BOTH",
-            "email":"system.monitoring@preciserd.ca",
-            "emv_entrymodes":entryModes,
-            "emv_termcaps":"NOSIG",
-            "MERCHID":"00"+str(merchNum),
-            "TERMID":ecr,
-            "countrycode":"124",
-            "currencycode":"124"
-        }
-        return (payload)
+def addMerchantAccountUser(
+    user:str,
+    merchNum:str,
+    ecr:str,
+    accountTier:int,
+    device:str
+):
+    #Monetra_AIP_v8.17.0.pdf Section 4.3.1
+    #Main Account vs Sub Account check
+    if accountTier == 0:
+        cardTypes="INTERAC"
+        entryModes="INTERAC_CONTACT|INTERAC_CONTACTLESS"
+    else:
+        cardTypes="VISA+MC+AMEX+DISC+JCB"
+        entryModes=("VISA_CONTACT|VISA_CONTACTLESS|MC_CONTACT|MC_CONTACTLESS|"
+            "AMEX_CONTACT|AMEX_CONTACTLESS|DISC_CONTACT")
+    #MPS vs Unattended check
+    if device =="MPS":
+        indCode="R"
+    else:
+        indCode="RS"
+    payload= {
+        "action":"adduser",
+        "username":"MADMIN",
+        "password":"precise*3984052",
+        "user":user,
+        "pwd":user+"*3984052",
+        "sub":accountTier,
+        "proc":"spdh",
+        "indcode":indCode,
+        "cardtypes":cardTypes,
+        "mode":"BOTH",
+        "email":"system.monitoring@preciserd.ca",
+        "emv_entrymodes":entryModes,
+        "emv_termcaps":"NOSIG",
+        "MERCHID":"00"+str(merchNum),
+        "TERMID":ecr,
+        "countrycode":"124",
+        "currencycode":"124"
+    }
+    return (payload)
 
-    def addMerchantSubUser(
-        user:str,
-        device:str
-    ):
-        #Monetra_AIP_v8.17.0.pdf Section 5.1.1
-        #MPS vs Unattended Check
-        if device =="MPS":
-            trantypes=("SALE|REVERSAL|VOID|RETURN|TOREVERSAL|CARDTYPE|TERMLOAD|"
-            "INTERACMAC|EMVCOMPLETE|ADMIN|CHKPWD")
-        else:
-            trantypes=("SALE|REVERSAL|VOID|TOREVERSAL|CARDTYPE|TERMLOAD|INTERACMAC|"
-                "EMVCOMPLETE|ADMIN|CHKPWD")
-        payload ={
-                    "action":"admin",
-                    "admin":"subuseradd",
-                    "username":user,
-                    "password":user+"*3984052",
-                    "user":"online",
-                    "pwd":user+"*3984052",
-                    "admintypes":("GETPERMS|MERCHINFO|RECURRINGADD|IMAGEADD|"
-                    "CARDSHIELDPROVISION"),
-                    "trantypes":trantypes,
-                    "userflags":"obscure|unattended"
-                } 
-        return (payload)
+def addMerchantSubUser(
+    user:str,
+    device:str
+):
+    #Monetra_AIP_v8.17.0.pdf Section 5.1.1
+    #MPS vs Unattended Check
+    if device =="MPS":
+        trantypes=("SALE|REVERSAL|VOID|RETURN|TOREVERSAL|CARDTYPE|TERMLOAD|"
+        "INTERACMAC|EMVCOMPLETE|ADMIN|CHKPWD")
+    else:
+        trantypes=("SALE|REVERSAL|VOID|TOREVERSAL|CARDTYPE|TERMLOAD|INTERACMAC|"
+            "EMVCOMPLETE|ADMIN|CHKPWD")
+    payload ={
+                "action":"admin",
+                "admin":"subuseradd",
+                "username":user,
+                "password":user+"*3984052",
+                "user":"online",
+                "pwd":user+"*3984052",
+                "admintypes":("GETPERMS|MERCHINFO|RECURRINGADD|IMAGEADD|"
+                "CARDSHIELDPROVISION"),
+                "trantypes":trantypes,
+                "userflags":"obscure|unattended"
+            } 
+    return (payload)
 
 def payloadGenerator(
     *args
