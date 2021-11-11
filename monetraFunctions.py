@@ -28,6 +28,8 @@ class merchEMV(merchant_account):
         self.interacECR = interacECR
         self.creditECR = creditECR
         self.device = device
+
+        
 def addMerchantAccountUser(
     user:str,
     merchNum:str,
