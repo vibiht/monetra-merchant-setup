@@ -3,6 +3,7 @@ from datetime import date
 import logging
 from os import getcwd
 
+import numpy
 import pandas
 from requests import post
 
@@ -36,8 +37,8 @@ def main():
     table = pandas.read_excel(
         excelPath,
         sheet_name=sheetName,
-        usecols="H,K,M,R,S,X",
-        dtype={"H": str, "K": str, "M": str, "R": str, "S": str, "X": str},
+        usecols="H,J,K,M,R,S,X",
+        dtype={"H": str, "J": str, "K": str, "M": str, "R": str, "S": str, "X": str},
         skiprows=rowStart,
         nrows=rowCount
     )
@@ -46,7 +47,7 @@ def main():
         logging.info("Reading row #:" + str(rowStart + i + 1))
         # Instantiate merchEMV Object using row data
         excelRow = monetraFunctions.merchEMV(
-            row[0], row[1], row[2], row[3], row[4], row[5])
+            row[0], row[1], row[2], row[3], row[4], row[5], row[6])
         logging.info("Row =" + str(excelRow))
         # Generate JSON Payload
         logging.info("Generating JSON Payload")
@@ -54,6 +55,7 @@ def main():
             monetraFunctions.payloadGenerator(
                 monetraFunctions.addMerchantAccountUser(
                     excelRow.user,
+                    excelRow.deviceFirm,
                     excelRow.merchNum,
                     excelRow.interacECR,
                     0,
@@ -61,6 +63,7 @@ def main():
                 ),
                 monetraFunctions.addMerchantAccountUser(
                     excelRow.user,
+                    excelRow.deviceFirm,
                     excelRow.merchNum,
                     excelRow.creditECR,
                     1,
@@ -71,10 +74,14 @@ def main():
         logging.info("Payload = " + payload)
         # POST
         logging.info("Sending POST request to " + host)
-        monReq = post(
-            host, data=payload, verify=False, allow_redirects=True)
-        print(monReq.text)
-        logging.info("Monetra Response: " + monReq.text)
+        # monReq = post(
+        #     host, 
+        #     data=payload, 
+        #     verify=False, 
+        #     allow_redirects=True
+        # )
+        #print(monReq.text)
+        #logging.info("Monetra Response: " + monReq.text)
         # Generate JSON Payload
         logging.info("Generating JSON Payload")
         payload = (
@@ -92,10 +99,14 @@ def main():
         logging.info("Payload = " + payload)
         # POST
         logging.info("Sending POST request to " + host)
-        monReq = post(
-            host, data=payload, verify=False, allow_redirects=True)
-        print(monReq.text)
-        logging.info("Monetra Response: " + monReq.text)
+        # monReq = post(
+        #     host, 
+        #     data=payload, 
+        #     verify=False, 
+        #     allow_redirects=True
+        # )
+        #print(monReq.text)
+        #logging.info("Monetra Response: " + monReq.text)
 
 
 if __name__ == "__main__":

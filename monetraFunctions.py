@@ -17,7 +17,8 @@ class merchant_account():
 class merchEMV(merchant_account):
     def __init__(
         self, 
-        merchNum:str,      
+        merchNum:str,
+        deviceFirm:str,      
         device:str, 
         user:str,   
         interacECR: str, 
@@ -28,10 +29,12 @@ class merchEMV(merchant_account):
         self.interacECR = interacECR
         self.creditECR = creditECR
         self.device = device
+        self.deviceFirm = deviceFirm
 
         
 def addMerchantAccountUser(
     user:str,
+    deviceFirm:str,
     merchNum:str,
     ecr:str,
     accountTier:int,
@@ -42,8 +45,16 @@ def addMerchantAccountUser(
     if accountTier == 0:
         cardTypes="INTERAC"
         entryModes="INTERAC_CONTACT|INTERAC_CONTACTLESS"
-    else:
+    elif accountTier == 1 and deviceFirm.split()[0] == "TCPX":
         cardTypes="VISA+MC+AMEX+DISC+JCB"
+        entryModes=("VISA_CONTACT|VISA_CONTACTLESS|MC_CONTACT|MC_CONTACTLESS|"
+            "AMEX_CONTACT|AMEX_CONTACTLESS|DISC_CONTACT|DISC_CONTACTLESS|JCB_CONTACT|JCB_CONTACTLESS")
+    elif accountTier == 1 and deviceFirm.split()[0] == "UCPX":
+        cardTypes="VISA+MC+AMEX+DISC"
+        entryModes=("VISA_CONTACT|VISA_CONTACTLESS|MC_CONTACT|MC_CONTACTLESS|"
+            "AMEX_CONTACT|AMEX_CONTACTLESS|DISC_CONTACT")
+    elif accountTier == 1 and deviceFirm.split()[0] == "CPX":
+        cardTypes="VISA+MC+AMEX+DISC"
         entryModes=("VISA_CONTACT|VISA_CONTACTLESS|MC_CONTACT|MC_CONTACTLESS|"
             "AMEX_CONTACT|AMEX_CONTACTLESS|DISC_CONTACT")
     #MPS vs Unattended check
