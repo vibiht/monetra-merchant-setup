@@ -74,14 +74,14 @@ def main():
         logging.info("Payload = " + payload)
         # POST
         logging.info("Sending POST request to " + host)
-        # monReq = post(
-        #     host, 
-        #     data=payload, 
-        #     verify=False, 
-        #     allow_redirects=True
-        # )
-        #print(monReq.text)
-        #logging.info("Monetra Response: " + monReq.text)
+        monReq = post(
+            host, 
+            data=payload, 
+            verify=False, 
+            allow_redirects=True
+        )
+        print(monReq.text)
+        logging.info("Monetra Response: " + monReq.text)
         # Generate JSON Payload
         logging.info("Generating JSON Payload")
         payload = (
@@ -99,14 +99,14 @@ def main():
         logging.info("Payload = " + payload)
         # POST
         logging.info("Sending POST request to " + host)
-        # monReq = post(
-        #     host, 
-        #     data=payload, 
-        #     verify=False, 
-        #     allow_redirects=True
-        # )
-        #print(monReq.text)
-        #logging.info("Monetra Response: " + monReq.text)
+        monReq = post(
+            host, 
+            data=payload, 
+            verify=False, 
+            allow_redirects=True
+        )
+        print(monReq.text)
+        logging.info("Monetra Response: " + monReq.text)
 
 
 if __name__ == "__main__":
