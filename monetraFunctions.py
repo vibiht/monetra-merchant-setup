@@ -31,7 +31,6 @@ class merchEMV(merchant_account):
         self.device = device
         self.deviceFirm = deviceFirm
 
-        
 def addMerchantAccountUser(
     user:str,
     deviceFirm:str,
@@ -109,19 +108,11 @@ def addMerchantSubUser(
             } 
     return (payload)
 
-def payloadGenerator(
-    *args
-):
-    payload={"MonetraTrans":{}}
-    for i,element in enumerate(args):
-        payload["MonetraTrans"][i]=element
-    return (json.dumps(payload,indent=4))
-
 def addMerchantCronTask(
     user:str, 
     settleTime:str
 ):
-    #Monetra_AIP_v8.17.0.pdf Section 5.10 
+#Monetra_AIP_v8.17.0.pdf Section 5.10 
     payload = {
                 "action":"admin",
                 "admin":"cron",
@@ -133,5 +124,13 @@ def addMerchantCronTask(
                 "cron_date":''.join(char for char in str(settleTime) if char.isalnum())[0:4]+"|*", #Removing special characters from time
                 "cron_task":"settle"
             } 
-
     return (payload)
+
+def payloadGenerator(
+    *args
+):
+    payload={"MonetraTrans":{}}
+    for i,element in enumerate(args):
+        payload["MonetraTrans"][i]=element
+    return (json.dumps(payload,indent=4))
+
